@@ -1,0 +1,23 @@
+---
+- name: playbook1
+  hosts: node1.example.com
+  user: ansible
+  become: yes
+  become_method: sudo
+  become_user: root
+
+  vars_files:
+    - secret.yml
+
+  tasks:
+    - name: Ensure users are created
+      user:
+        name: "{{ item }}"
+        password: "{{ pwhash | password_hash('sha512') }}"
+        comment: "{{ item }}@example.com"
+        #state: present
+        update_password: on_create
+      with_items: [alice, bob, carol]
+              # - {username: Alice, email: alice@example.com}
+              # - {username: Bob, email: bob@example.com}
+              # - {username: Carol, email: carol@example.com}
