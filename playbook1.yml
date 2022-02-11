@@ -1,23 +1,28 @@
 ---
 - name: playbook1
-  hosts: node1.example.com
+  hosts: nodes
   user: ansible
   become: yes
   become_method: sudo
   become_user: root
 
-  vars_files:
-    - secret.yml
+  vars:
+    the_password: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          36626561376136633734613639613935373566386437383438643365383261346531393365626338
+          3837363864323961346130663666383235313435353863320a666361383034623835323832666562
+          39393033303236316161613133616463643336383533623665643230666537383432396538613633
+          3664366337306331360a653534646233666265366133366634383834396162303336343639343039
+          3932
+  vars_files: 
+    - users.yml
 
   tasks:
     - name: Ensure users are created
       user:
-        name: "{{ item }}"
-        password: "{{ pwhash | password_hash('sha512') }}"
-        comment: "{{ item }}@example.com"
-        #state: present
+        name: "{{ item.value.username }}"
+        password: "{{ the_password }}"
+        comment: "{{ item.value.email }}"
         update_password: on_create
-      with_items: [alice, bob, carol]
-              # - {username: Alice, email: alice@example.com}
-              # - {username: Bob, email: bob@example.com}
-              # - {username: Carol, email: carol@example.com}
+      with_dict: users
+             
