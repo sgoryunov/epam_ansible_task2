@@ -15,7 +15,7 @@
           3664366337306331360a653534646233666265366133366634383834396162303336343639343039
           3932
   vars_files: 
-    - users.yml
+    - vars/users.yml
 
   tasks:
     - name: Ensure users are created
