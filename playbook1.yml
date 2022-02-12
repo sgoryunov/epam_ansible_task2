@@ -15,6 +15,6 @@
         name: "{{ item.value.username }}"
         password: "{{ item.password | string | password_hash('sha512') }}"
         comment: "{{ item.value.email }}"
-        update_password: allways
+        update_password: on_create
       with_dict: "{{ users }}"
              
