@@ -13,7 +13,7 @@
     - name: Ensure users are created
       user:
         name: "{{ item.value.username }}"
-        password: "{{ item.password | string | password_hash('sha512') }}"
+        password: "{{ item.value.password | string | password_hash('sha512') }}"
         comment: "{{ item.value.email }}"
         update_password: on_create
       with_dict: "{{ users }}"
